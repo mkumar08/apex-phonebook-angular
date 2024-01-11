@@ -17,7 +17,7 @@ const urls = [
         method: 'POST',
         getData: (request, id) => {
             request.body.id = storage.data.length + 1;
-            // storage.data.push(request.body)
+            storage.data.push(request.body)
             return request.body
         }
     }, {
@@ -35,6 +35,16 @@ const urls = [
 
             return foundItem
         }
+    },
+    {
+      url:'http://localhost:8080/api/contact/#',
+      method:'DELETE',
+      getData:(req,id)=>{
+        const foundIndex = storage.data.findIndex((val)=>val.id==id+'');
+        storage.data.splice(foundIndex,1);
+        let items=[...storage.data];
+        return items;
+      }
     }
 ];
 

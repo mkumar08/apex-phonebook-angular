@@ -17,6 +17,11 @@ export class ContactFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
+      if(this.contactService.shareContact$){
+        this.contactService.shareContact$.subscribe((res:Contact)=>{
+          this.model=res;
+        })
+      }
     }
 
     createNew() {
@@ -24,8 +29,13 @@ export class ContactFormComponent implements OnInit {
     }
 
     onSubmit(contactForm: NgForm) {
+      if(this.model.id){
+        this.contactService.putContact(this.model).subscribe((contact)=>{
+          this.model=this.createNew();
+          contactForm.resetForm();
+        })
+      }else{
         this.submitted = true;
-
         this.contactService.postContact(this.model)
             .subscribe(contact => {
                 console.log('object saved', contact);
@@ -33,7 +43,7 @@ export class ContactFormComponent implements OnInit {
                 this.submitted = false;
                 contactForm.resetForm();
             });
-
+          }
         console.log('submitted');
     }
 

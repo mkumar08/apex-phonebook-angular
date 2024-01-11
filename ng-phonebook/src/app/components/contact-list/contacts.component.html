@@ -1,4 +1,6 @@
 <app-contact-form></app-contact-form>
 <div *ngFor="let contact of this.contacts">
   {{contact.firstName}}, {{contact.lastName}}, {{contact.email}}
+  <button (click)="deleteRow(contact)">Delete</button>
+  <button (click)="editRow(contact)">Edit</button>
 </div>

@@ -24,4 +24,12 @@ export class ContactsComponent implements OnInit {
       this.contacts = list;
     });
   }
+  deleteRow(contact:Contact){
+     this.contactService.deleteContact(contact?.id).subscribe((res)=>{
+      this.readAll();
+     })
+  }
+  editRow(contact:Contact){
+     this.contactService.setShareContact(contact);
+  }
 }

@@ -3,7 +3,7 @@ import {throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 import {Injectable} from "@angular/core";
 import {Contact} from "../components/contact-list/contact";
-
+import {Subject, Observable} from 'rxjs';
 const httpOptions = {
     headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -12,12 +12,15 @@ const httpOptions = {
 
 @Injectable()
 export class ContactService {
-
+    private shareContact= new Subject();
+    public shareContact$= this.shareContact.asObservable();
     constructor(private http: HttpClient) {
     }
 
     serverUrl = 'http://localhost:8080/api/contact';
-
+    setShareContact(contact:Contact){
+       this.shareContact.next(contact);
+    }
     private static handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {
             console.error('An error occurred:', error.error.message);
@@ -38,6 +41,10 @@ export class ContactService {
     putContact(contact: Contact) {
         return this.http.put<Contact>(this.serverUrl + '/' + contact.id, contact, httpOptions)
             .pipe(catchError(ContactService.handleError));
+    }
+    deleteContact(id:number){
+        return this.http.delete(this.serverUrl+'/'+id,httpOptions)
+        .pipe(catchError(ContactService.handleError));
     }
 
     loadAll() {
